@@ -1,0 +1,166 @@
+useState :
+        Rôle : useState permet de déclarer un état local dans un composant fonctionnel.
+        Description : Le hook useState renvoie un tableau contenant la valeur actuelle de l'état et une fonction pour la mettre à jour. 
+		Lorsque la fonction de mise à jour est appelée, le composant est re-rendu avec la nouvelle valeur d'état.
+		Cela permet de gérer l'état dans les composants fonctionnels, sans avoir besoin de créer une classe. 
+		Par exemple, vous pouvez utiliser useState pour gérer un compteur, une valeur de formulaire, ou tout autre état local dans votre composant.
+	Exemple d'utilisation :
+
+   import React, { useState } from 'react';
+
+   function Counter() {
+     const [count, setCount] = useState(0);
+
+     return (
+       <div>
+         <p>Count: {count}</p>
+         <button onClick={() => setCount(count + 1)}>Increment</button>
+       </div>
+     );
+   }
+   ```
+
+useEffect :
+        Rôle : useEffect permet d'effectuer des effets de bord dans un composant fonctionnel.
+        Description : Le hook useEffect est utilisé pour gérer des opérations qui nécessitent d'être effectuées après le rendu du composant, 
+		telles que les appels à des API, les abonnements, les mises à jour du titre de la page, etc. 
+		Vous pouvez considérer useEffect comme le remplacement des méthodes de cycle de vie(componentDidMount,componentDidUpdate,componentWillUnmount) pour les composants de classe.
+		Vous pouvez également spécifier des dépendances pour contrôler quand l'effet doit être exécuté.
+	Exemple d'utilisation :
+
+   import React, { useState, useEffect } from 'react';
+
+   function Timer() {
+     const [seconds, setSeconds] = useState(0);
+
+     useEffect(() => {
+       const interval = setInterval(() => {
+         setSeconds(seconds + 1);
+       }, 1000);
+
+       return () => clearInterval(interval);
+     }, [seconds]);
+
+     return <p>Elapsed time: {seconds} seconds</p>;
+   }
+   ```
+
+useContext :
+        Rôle : useContext permet d'accéder au contexte dans un composant fonctionnel.
+        Description : Le hook useContext permet de récupérer des données fournies par un ContextProvider,
+		ce qui évite le "prop drilling" (passage de props à travers plusieurs niveaux de composants).
+		Les contextes sont utiles lorsque vous avez besoin de partager des données entre des composants qui ne sont pas directement liés par la hiérarchie parent-enfant.
+	Exemple d'utilisation :
+
+   import React, { useContext } from 'react';
+
+   const ThemeContext = React.createContext('light');
+
+   function ThemedText() {
+     const theme = useContext(ThemeContext);
+     return <p>Current theme: {theme}</p>;
+   }
+   ```
+
+useCallback :
+        Rôle : useCallback permet de mémoriser une fonction en mémoire et de la rappeler seulement si ses dépendances changent.
+        Description : Ce hook est utilisé pour optimiser les performances en évitant les rendus inutiles des composants.
+		Lorsque vous passez des fonctions en tant que props à des composants enfants, useCallback vous permet de vous assurer que la fonction est la même entre les rendus,
+		à moins que ses dépendances (définies dans le deuxième argument) changent.
+	Exemple d'utilisation :
+	
+	import React, { useState, useCallback } from 'react';
+
+   function ParentComponent() {
+     const [count, setCount] = useState(0);
+
+     const increment = useCallback(() => {
+       setCount(count + 1);
+     }, [count]);
+
+     return (
+       <div>
+         <p>Count: {count}</p>
+         <ChildComponent increment={increment} />
+       </div>
+     );
+   }
+
+   function ChildComponent({ increment }) {
+     return <button onClick={increment}>Increment</button>;
+   }
+   ```
+
+useReducer :
+        Rôle : useReducer permet d'utiliser le concept de "reducer" pour gérer l'état dans un composant fonctionnel.
+        Description : Le hook useReducer est similaire à useState, mais il est plus approprié lorsque l'état est complexe et qu'il y a plusieurs actions qui peuvent le modifier.
+		Un reducer est une fonction qui spécifie comment l'état doit être mis à jour en réponse à une action donnée. 
+		Il est utile pour gérer les états basés sur un comportement déterministe.
+	Exemple d'utilisation :
+
+   import React, { useReducer } from 'react';
+
+   const initialState = { count: 0 };
+
+   function reducer(state, action) {
+     switch (action.type) {
+       case 'increment':
+         return { count: state.count + 1 };
+       default:
+         return state;
+     }
+   }
+
+   function Counter() {
+     const [state, dispatch] = useReducer(reducer, initialState);
+
+     return (
+       <div>
+         <p>Count: {state.count}</p>
+         <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+       </div>
+     );
+   }
+   ```
+
+useMemo :
+        Rôle : useMemo permet de mémoriser une valeur calculée en mémoire et de la recalculer seulement si ses dépendances changent.
+        Description : Ce hook est utilisé pour optimiser les calculs coûteux en évitant de les recalculer à chaque rendu du composant.
+		Vous pouvez utiliser useMemo pour mémoriser des valeurs dérivées à partir de l'état ou des props, 
+		ce qui réduit le temps de rendu du composant lorsque les dépendances ne changent pas.
+	Exemple d'utilisation :
+
+   import React, { useMemo } from 'react';
+
+   function ExpensiveCalculationComponent({ data }) {
+     const result = useMemo(() => {
+       // Effectuer un calcul coûteux en utilisant "data"
+       return performExpensiveCalculation(data);
+     }, [data]);
+
+     return <p>Result: {result}</p>;
+   }
+   ```
+
+useRef :
+        Rôle : useRef permet de créer une référence mutable qui persiste entre les rendus du composant.
+        Description : Le hook useRef est principalement utilisé pour accéder à des éléments du DOM ou pour conserver une valeur mutable qui ne déclenche pas un nouveau rendu du composant. 
+		Contrairement à l'état (useState), la modification de la référence retournée par useRef ne provoque pas de ré-render du composant.
+	Exemple d'utilisation :
+
+   import React, { useRef, useEffect } from 'react';
+
+   function InputWithFocus() {
+     const inputRef = useRef(null);
+
+     useEffect(() => {
+       // Focus sur l'élément input après le rendu initial
+       inputRef.current.focus();
+     }, []);
+
+     return <input ref={inputRef} />;
+   }
+   ```
+
+Ces hooks sont des outils puissants pour travailler avec des composants fonctionnels dans React.
+Ils vous permettent de gérer l'état, les effets de bord et d'autres fonctionnalités avancées de manière plus concise et modulaire, sans la nécessité de créer des composants de classe.
